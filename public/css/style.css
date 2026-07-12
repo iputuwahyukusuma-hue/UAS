@@ -1,0 +1,54 @@
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f1f3f4;
+    margin: 0;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+h1 { color: #202124; }
+
+#noteForm {
+    background: #ffffff;
+    padding: 15px;
+    width: 100%;
+    max-width: 500px;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 30px;
+}
+#noteForm input, #noteForm textarea {
+    border: none; outline: none; font-size: 16px; width: 100%;
+}
+#noteForm input { font-weight: bold; }
+#noteForm textarea { resize: none; height: 80px; }
+
+.btn-container { display: flex; justify-content: flex-end; gap: 10px; }
+button {
+    border: none; padding: 8px 16px; font-weight: bold; border-radius: 4px; cursor: pointer;
+}
+.btn-save { background-color: #fbbc04; color: #202124; }
+.btn-cancel { background-color: #e0e0e0; color: #5f6368; display: none; }
+
+#notesContainer {
+    width: 100%; max-width: 800px;
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 16px;
+}
+.note-card {
+    background: #ffffff; border: 1px solid #e0e0e0; border-radius: 8px;
+    padding: 15px; min-height: 120px; display: flex; flex-direction: column;
+    justify-content: space-between; position: relative; cursor: pointer;
+}
+.note-card:hover { box-shadow: 0 1px 4px rgba(0,0,0,0.2); }
+.note-title { font-size: 16px; font-weight: 600; margin: 0 0 8px 0; }
+.note-content { font-size: 14px; color: #5f6368; margin: 0; white-space: pre-wrap; flex-grow: 1; }
+
+.btn-delete {
+    background: none; color: #cc0000; font-size: 12px; align-self: flex-end;
+    padding: 4px 8px; margin-top: 10px; border-radius: 4px;
+}
+.btn-delete:hover { background-color: #ffebee; }
