@@ -2,6 +2,7 @@ Dokumentasi Pengujian
 Project
 
 Google Keep Clone REST API
+
 Teknologi yang digunakan:
 
 Node.js
@@ -9,13 +10,13 @@ Express.js
 MySQL (Laragon)
 Metode Pengujian
 
-Pengujian pada aplikasi dilakukan menggunakan beberapa alat berikut:
+Pengujian dilakukan menggunakan beberapa tools berikut:
 
-Jest sebagai test runner untuk menjalankan seluruh pengujian secara otomatis.
-Supertest untuk melakukan pengujian endpoint REST API melalui HTTP Request dan HTTP Response.
-Unit Testing untuk menguji logika program pada layer Controller dan Model.
-Jest Mock untuk mensimulasikan database sehingga pengujian tidak mengubah data asli pada MySQL Laragon.
-Code Coverage untuk mengukur seberapa besar bagian kode yang telah diuji.
+Jest sebagai test runner untuk menjalankan seluruh unit test.
+Supertest untuk melakukan pengujian endpoint REST API melalui HTTP Request dan Response.
+Unit Testing pada layer Controller, Service, dan Model.
+Jest Mock untuk mensimulasikan database sehingga pengujian tidak mengakses database MySQL secara langsung.
+Code Coverage untuk mengukur tingkat cakupan pengujian terhadap source code.
 File yang Diuji
 1. API Route & Controller Test
 
@@ -23,99 +24,59 @@ File
 
 tests/note.test.js
 Skenario Pengujian
-1. Pembuatan Catatan dengan Label Dinamis
-
-Memastikan endpoint dapat menerima label yang diketik bebas oleh pengguna kemudian menyimpan data dengan benar.
-
-Expected Result
-
-Status HTTP 201 Created
-Data catatan berhasil dibuat.
-2. Soft Delete (Move to Trash)
-
-Menguji proses pemindahan catatan ke menu Sampah dengan mengubah nilai is_deleted menjadi 1.
-
-Expected Result
-
-Status HTTP 200 OK
-Data berhasil dipindahkan ke Sampah.
-3. Search Note
-
-Menguji fitur pencarian catatan menggunakan query parameter.
-
-Expected Result
-
-API mengembalikan daftar catatan yang sesuai dengan kata kunci.
-4. Archive Note
-
-Menguji proses pengarsipan catatan.
-
-Expected Result
-
-Nilai is_archived berubah menjadi 1.
-Status HTTP 200 OK.
-2. Service / Model Test
+Membuat catatan baru.
+Mengambil seluruh data catatan.
+Mengambil detail catatan berdasarkan ID.
+Memperbarui isi catatan.
+Menghapus catatan.
+Memindahkan catatan ke Sampah (Soft Delete).
+Mengembalikan catatan dari Sampah.
+Mengarsipkan catatan.
+Membatalkan arsip catatan.
+Pencarian catatan berdasarkan keyword.
+Pengelolaan label dinamis pada catatan.
+Validasi status HTTP dan response body.
+2. Service Test
 
 File
 
 tests/note.service.test.js
+Skenario Pengujian
+Menguji proses bisnis sebelum data dikirim ke Model.
+Memastikan fungsi service memanggil model yang sesuai.
+Memastikan data yang dikembalikan sesuai dengan hasil model.
+3. Model Test
+
+File
+
 tests/note.model.test.js
 Skenario Pengujian
-1. getAll()
+Mengambil seluruh data (SELECT).
+Mengambil data berdasarkan ID.
+Menambahkan data (INSERT).
+Memperbarui data (UPDATE).
+Menghapus data (DELETE).
+Memindahkan data ke Sampah.
+Mengembalikan data dari Sampah.
+Mengarsipkan data.
+Membatalkan arsip.
+Melakukan pencarian data menggunakan query.
+4. Database Test
 
-Memastikan fungsi mengambil seluruh data dari database.
+File
 
-Query yang diuji
-
-SELECT * FROM notes;
-
-Expected Result
-
-Mengembalikan data dalam bentuk array.
-2. create()
-
-Memastikan proses penyimpanan data berjalan dengan benar.
-
-Query yang diuji
-
-INSERT INTO notes (...);
-
-Expected Result
-
-Data berhasil disimpan.
-Mengembalikan nilai insertId.
-3. update()
-
-Memastikan proses perubahan isi catatan berjalan sesuai parameter yang diberikan.
-
-Query yang diuji
-
-UPDATE notes
-SET ...
-WHERE id = ?;
-
-Expected Result
-
-Data berhasil diperbarui.
-4. delete()
-
-Memastikan proses penghapusan permanen berjalan dengan benar.
-
-Query yang diuji
-
-DELETE FROM notes
-WHERE id = ?;
-
-Expected Result
-
-Mengembalikan nilai true.
+tests/db.test.js
+Skenario Pengujian
+Memastikan modul database berhasil dibuat.
+Memastikan koneksi database dapat digunakan oleh Model.
+Memastikan konfigurasi database berjalan sesuai kebutuhan aplikasi.
 Implementasi Mocking
 
-Seluruh koneksi database dimock menggunakan Jest Mock sehingga proses pengujian tidak mengakses database MySQL secara langsung.
+Seluruh proses akses database dimock menggunakan Jest Mock, sehingga proses pengujian tidak melakukan perubahan terhadap database MySQL Laragon.
 
 Contoh implementasi:
 
-// Mock koneksi database
+// Mock database
 jest.mock('../src/database/db', () => ({
   query: jest.fn()
 }));
@@ -126,38 +87,33 @@ jest.mock('../src/models/note.model');
 Dengan pendekatan ini:
 
 Pengujian berjalan lebih cepat.
-Data database tetap aman.
+Tidak mengubah data asli pada database.
 Hasil pengujian menjadi konsisten.
+Memudahkan pengujian berbagai skenario tanpa bergantung pada kondisi database.
 Hasil Eksekusi Pengujian
-Test Summary
-Test Suites : 3 passed, 3 total
-Tests       : 9 passed, 9 total
+Ringkasan Pengujian (Test Summary)
+Test Suites : 4 passed, 4 total
+Tests       : 62 passed, 62 total
 Snapshots   : 0 total
-Time        : 1.962 s
+Time        : 1.883 s
 Ran all test suites.
 
-Seluruh skenario pengujian berhasil dijalankan tanpa adanya kegagalan.
+Seluruh pengujian berhasil dijalankan tanpa kegagalan (100% berhasil).
 
 Code Coverage
-File	Statements	Branches	Functions	Lines	Uncovered
-controllers/note.controller.js	67.5%	50%	50%	67.5%	4-8, 22, 28, 45, 51, 56-61
-database/db.js	100%	100%	100%	100%	Tidak ada
-models/note.model.js	100%	100%	100%	100%	Tidak ada
+File / Folder	% Statements	% Branches	% Functions	% Lines	Uncovered Line
+controllers	97.50%	76.92%	100%	97.50%	Line 45
+note.controller.js	97.50%	76.92%	100%	97.50%	Line 45
+database	100%	100%	100%	100%	Tidak ada
+db.js	100%	100%	100%	100%	Tidak ada
+models	100%	100%	100%	100%	Tidak ada
+note.model.js	100%	100%	100%	100%	Tidak ada
 Overall Project Coverage
-Statements : 76.36%
-Branches   : 61.76%
-Functions  : 75.00%
-Lines      : 76.36%
+Statements : 98.18%
+Branches   : 82.35%
+Functions  : 100%
+Lines      : 98.18%
 
-Kesimpulan:
+Kesimpulan
 
-Berdasarkan hasil pengujian menggunakan Jest, Supertest, dan Mocking, seluruh skenario pengujian berhasil dijalankan dengan tingkat keberhasilan 100% (9 dari 9 pengujian berhasil).
-
-Beberapa hasil yang diperoleh antara lain:
--Seluruh endpoint utama REST API dapat berjalan sesuai fungsi yang diharapkan.
--Modul database (db.js) dan model (note.model.js) memperoleh code coverage 100%, menunjukkan seluruh logika pada kedua modul telah berhasil diuji.
--Fitur label dinamis dapat menerima berbagai variasi input pengguna tanpa menyebabkan kesalahan pada sistem.
--Mekanisme Soft Delete berhasil mengubah status is_deleted sehingga catatan berpindah ke menu Sampah tanpa menghapus data secara permanen.
--Fitur Search Note dan Archive Note juga berjalan sesuai spesifikasi.
-
-Secara keseluruhan, backend Google Keep Clone REST API menunjukkan tingkat stabilitas yang baik dengan seluruh pengujian berhasil dilewati. Meskipun demikian, code coverage pada layer Controller masih sebesar 67,5%, sehingga masih terdapat beberapa kondisi yang belum diuji. Penambahan skenario pengujian pada bagian Controller akan membantu meningkatkan cakupan pengujian dan kualitas aplikasi di masa mendatang.
+Berdasarkan hasil pengujian, aplikasi Google Keep Clone REST API berhasil melewati seluruh pengujian dengan 4 test suite dan 62 test** yang semuanya berhasil (100%). Hasil code coverage juga sangat baik, yaitu 98,18% untuk *Statements* dan *Lines*, **82,35%** untuk *Branches*, serta **100%** untuk *Functions*. Selain itu, modul database dan model telah mencapai 100% coverage, sehingga dapat disimpulkan bahwa fitur-fitur utama seperti CRUD catatan, pencarian, arsip, restore, soft delete, dan **pengelolaan label berjalan dengan baik. Secara keseluruhan, aplikasi memiliki tingkat stabilitas dan kualitas yang tinggi sehingga layak untuk digunakan.
