@@ -31,19 +31,16 @@
 
     <div class="main-layout">
         <div class="sidebar">
-            <div class="sidebar-item active">
+            <div class="sidebar-item active" id="menuCatatan">
                 <span class="sidebar-icon">💡</span><span class="sidebar-text">Catatan</span>
             </div>
-            <div class="sidebar-item">
+            <div class="sidebar-item" id="menuPengingat">
                 <span class="sidebar-icon">🔔</span><span class="sidebar-text">Pengingat</span>
             </div>
-            <div class="sidebar-item">
-                <span class="sidebar-icon">✏️</span><span class="sidebar-text">Label</span>
-            </div>
-            <div class="sidebar-item">
+            <div class="sidebar-item" id="menuArsip">
                 <span class="sidebar-icon">📥</span><span class="sidebar-text">Arsip</span>
             </div>
-            <div class="sidebar-item">
+            <div class="sidebar-item" id="menuSampah">
                 <span class="sidebar-icon">🗑️</span><span class="sidebar-text">Sampah</span>
             </div>
         </div>
@@ -54,23 +51,29 @@
                     <input type="text" id="title" placeholder="Judul" autocomplete="off">
                     <textarea id="content" placeholder="Tulis catatan..."></textarea>
                     
+                    <div id="reminderInputContainer" style="display: none; padding: 5px 0;">
+                        <label style="font-size: 12px; color: #5f6368;">⏰ Atur Pengingat: </label>
+                        <input type="datetime-local" id="reminderTime" style="border: 1px solid #dadce0 !important; padding: 4px; border-radius: 4px; width: auto !important; font-size: 13px;">
+                    </div>
+
+                    <input type="hidden" id="isChecklist" value="0">
+                    
                     <div class="form-footer">
                         <div class="form-icons">
-                            <span title="Daftar Bercentang">☑️</span>
-                            <span title="Ingatkan Saya">🔔</span>
-                            <span title="Kolaborator">👤</span>
-                            <span title="Ubah Warna">🎨</span>
-                            <span title="Tambahkan Gambar">🖼️</span>
-                            <span title="Arsipkan">📥</span>
-                            <span title="Lainnya">📌</span>
+                            <span id="iconChecklist" title="Ubah ke format Checklist">☑️</span>
+                            <span id="iconReminder" title="Atur Waktu Pengingat">🔔</span>
+                            
+                            <span id="iconColor" class="color-picker-wrapper" title="Ubah Warna">🎨
+                                <select id="colorSelect">
+                                    <option value="Putih">⚪ Putih</option>
+                                    <option value="Kuning">🟡 Kuning</option>
+                                    <option value="Biru">🔵 Biru</option>
+                                    <option value="Hijau">🟢 Hijau</option>
+                                </select>
+                            </span>
+                            <span id="iconArchive" title="Arsipkan">📥</span>
                         </div>
                         <div class="form-actions">
-                            <select id="colorSelect">
-                                <option value="Putih">Putih</option>
-                                <option value="Kuning">Kuning</option>
-                                <option value="Biru">Biru</option>
-                                <option value="Hijau">Hijau</option>
-                            </select>
                             <button type="button" id="cancelBtn" class="btn-cancel">Batal</button>
                             <button type="submit" id="submitBtn" class="btn-save">+ Tambah</button>
                         </div>
