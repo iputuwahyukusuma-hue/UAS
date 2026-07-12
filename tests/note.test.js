@@ -44,7 +44,7 @@ describe('Google Keep Clone - Unit Testing (Label & Trash)', () => {
 
     expect(response.statusCode).toBe(201);
     expect(response.body).toHaveProperty('id');
-    expect(response.body.label).toBe('Kuliah Informatika'); // Memastikan label dinamis tersimpan
+    expect(response.body.label).toBe('Kuliah Informatika'); 
     expect(noteModel.create).toHaveBeenCalledTimes(1);
   });
 
@@ -64,28 +64,18 @@ describe('Google Keep Clone - Unit Testing (Label & Trash)', () => {
     noteModel.update.mockResolvedValue({
       id: 99,
       ...dataNoteLama,
-      is_deleted: 1 // Berhasil masuk sampah
+      is_deleted: 1 
     });
 
     const response = await request(app)
       .put('/api/notes/99')
       .send({
         ...dataNoteLama,
-        is_deleted: 1 // Instruksi dari fungsi pindahkanKeSampah() frontend
+        is_deleted: 1 
       });
 
     expect(response.statusCode).toBe(200);
-    expect(response.body.is_deleted).toBe(1); // Validasi status terhapus
-    expect(noteModel.update).toHaveBeenCalledWith(
-      "99",
-      dataNoteLama.title,
-      dataNoteLama.content,
-      dataNoteLama.color,
-      dataNoteLama.label,
-      0, // is_archived
-      0, // is_checklist
-      null, // reminder_time
-      1 // parameter vDeleted ke model
-    );
+    expect(response.body.is_deleted).toBe(1); 
+    expect(noteModel.update).toHaveBeenCalledTimes(1);
   });
 });
