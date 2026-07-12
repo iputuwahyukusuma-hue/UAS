@@ -13,7 +13,7 @@ app.use(express.json());
 app.get('/api/notes', noteController.getNotes);
 app.post('/api/notes', noteController.createNote);
 app.put('/api/notes/:id', noteController.updateNote);
-  app.delete('/api/notes/:id', noteController.deleteNote);
+app.delete('/api/notes/:id', noteController.deleteNote);
 
 describe('Google Keep Clone - Controller Layer Unit Testing', () => {
 
@@ -59,7 +59,6 @@ describe('Google Keep Clone - Controller Layer Unit Testing', () => {
 
       expect(response.statusCode).toBe(201);
       expect(response.body).toEqual(mockOutput);
-      // Memastikan nilai fallback default dikirim ke model
       expect(noteModel.create).toHaveBeenCalledWith('Halo', 'Dunia', 'Putih', null, 0, 0, null);
     });
 
@@ -69,8 +68,30 @@ describe('Google Keep Clone - Controller Layer Unit Testing', () => {
 
       await request(app).post('/api/notes').send(mockInput);
 
-      // Memastikan 'T' diganti spasi
       expect(noteModel.create).toHaveBeenCalledWith('Rapat', undefined, 'Putih', null, 0, 0, '2026-07-12 15:30:00');
+    });
+
+    test('Harus tetap berhasil membuat catatan meskipun judul dan konten kosong (Nilai Default)', async () => {
+      const mockOutput = { id: 3, title: '', content: '', color: 'Putih', label: null };
+      noteModel.create.mockResolvedValue(mockOutput);
+
+      const response = await request(app)
+        .post('/api/notes')
+        .send({ title: '', content: '' });
+
+      expect(response.statusCode).toBe(201);
+      expect(response.body.title).toBe('');
+      expect(noteModel.create).toHaveBeenCalledWith('', '', 'Putih', null, 0, 0, null);
+    });
+
+    test('Harus mengabaikan reminder_time jika dikirim sebagai string kosong atau spasi saja', async () => {
+      noteModel.create.mockResolvedValue({ id: 4 });
+
+      await request(app)
+        .post('/api/notes')
+        .send({ title: 'Tanpa Reminder', reminder_time: '   ' });
+
+      expect(noteModel.create).toHaveBeenCalledWith('Tanpa Reminder', undefined, 'Putih', null, 0, 0, null);
     });
 
     test('Harus mengembalikan status 400 jika pembuatan gagal (Mengejar Line 27-28)', async () => {
