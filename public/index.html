@@ -5,21 +5,82 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Google Keep Clone</title>
     <link rel="stylesheet" href="/css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 </head>
 <body>
 
-    <h1>Keep Clone</h1>
-
-    <form id="noteForm">
-        <input type="text" id="title" placeholder="Judul" required autocomplete="off">
-        <textarea id="content" placeholder="Tulis catatan..."></textarea>
-        <div class="btn-container">
-            <button type="button" id="cancelBtn" class="btn-cancel">Batal Edit</button>
-            <button type="submit" id="submitBtn" class="btn-save">Simpan</button>
+    <div class="navbar">
+        <div class="nav-left">
+            <div class="menu-icon">&#9776;</div>
+            <div class="keep-logo">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="#fbbc04"><path d="M9 21c0 .55.45 1 1 1h4c.55 0 1-.45 1-1v-1H9v1zm3-19C8.14 2 5 5.14 5 9c0 2.38 1.19 4.47 3 5.74V17c0 .55.45 1 1 1h6c.55 0 1-.45 1-1v-2.26c1.81-1.27 3-3.36 3-5.74 0-3.86-3.14-7-7-7zm2.85 11.1l-.85.6V16h-4v-1.3l-.85-.6A4.997 4.997 0 0 1 7 9c0-2.76 2.24-5 5-5s5 2.24 5 5c0 1.63-.8 3.16-2.15 4.1z"/></svg>
+                <span>Keep</span>
+            </div>
         </div>
-    </form>
+        <div class="search-container">
+            <span class="search-icon">🔍</span>
+            <input type="text" id="searchBar" placeholder="Cari catatan...">
+        </div>
+        <div class="nav-right">
+            <span class="nav-btn">🔄</span>
+            <span class="nav-btn">⚙️</span>
+            <span class="nav-btn">⣿</span>
+            <div class="profile-pic">👤</div>
+        </div>
+    </div>
 
-    <div id="notesContainer"></div>
+    <div class="main-layout">
+        <div class="sidebar">
+            <div class="sidebar-item active">
+                <span class="sidebar-icon">💡</span><span class="sidebar-text">Catatan</span>
+            </div>
+            <div class="sidebar-item">
+                <span class="sidebar-icon">🔔</span><span class="sidebar-text">Pengingat</span>
+            </div>
+            <div class="sidebar-item">
+                <span class="sidebar-icon">✏️</span><span class="sidebar-text">Label</span>
+            </div>
+            <div class="sidebar-item">
+                <span class="sidebar-icon">📥</span><span class="sidebar-text">Arsip</span>
+            </div>
+            <div class="sidebar-item">
+                <span class="sidebar-icon">🗑️</span><span class="sidebar-text">Sampah</span>
+            </div>
+        </div>
+
+        <div class="content-area">
+            <div class="form-container">
+                <form id="noteForm">
+                    <input type="text" id="title" placeholder="Judul" autocomplete="off">
+                    <textarea id="content" placeholder="Tulis catatan..."></textarea>
+                    
+                    <div class="form-footer">
+                        <div class="form-icons">
+                            <span title="Daftar Bercentang">☑️</span>
+                            <span title="Ingatkan Saya">🔔</span>
+                            <span title="Kolaborator">👤</span>
+                            <span title="Ubah Warna">🎨</span>
+                            <span title="Tambahkan Gambar">🖼️</span>
+                            <span title="Arsipkan">📥</span>
+                            <span title="Lainnya">📌</span>
+                        </div>
+                        <div class="form-actions">
+                            <select id="colorSelect">
+                                <option value="Putih">Putih</option>
+                                <option value="Kuning">Kuning</option>
+                                <option value="Biru">Biru</option>
+                                <option value="Hijau">Hijau</option>
+                            </select>
+                            <button type="button" id="cancelBtn" class="btn-cancel">Batal</button>
+                            <button type="submit" id="submitBtn" class="btn-save">+ Tambah</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <div id="notesContainer"></div>
+        </div>
+    </div>
 
     <script src="/js/app.js"></script>
 </body>

@@ -1,7 +1,7 @@
 const API_URL = '/api/notes';
 let currentEditId = null;
 
-// 1. MUAT CATATAN (READ)
+// 1. READ CATATAN DARI DATABASE
 async function muatCatatan() {
     try {
         const response = await fetch(API_URL);
@@ -11,18 +11,27 @@ async function muatCatatan() {
 
         dataCatatan.forEach(note => {
             const card = document.createElement('div');
-            card.className = 'note-card';
+            const warnaClass = `bg-${(note.color || 'Putih').toLowerCase()}`;
+            card.className = `note-card ${warnaClass}`;
+            
             card.onclick = (e) => {
                 if(e.target.classList.contains('btn-delete')) return;
                 setModeEdit(note);
             };
 
+            // Membuat variasi tanggal opsional di card bawah (seperti gambar)
+            const opsiTanggal = note.created_at ? new Date(note.created_at).toLocaleDateString('id-ID', {day: 'numeric', month: 'short', year: 'numeric'}) : '';
+
             card.innerHTML = `
+                <div class="card-pin">📌</div>
                 <div>
                     <h3 class="note-title">${escapeHTML(note.title)}</h3>
                     <p class="note-content">${escapeHTML(note.content || '')}</p>
                 </div>
-                <button class="btn-delete" onclick="hapusCatatan(${note.id})">Hapus</button>
+                <div class="card-footer">
+                    <span class="card-date">${opsiTanggal}</span>
+                    <button class="btn-delete" onclick="hapusCatatan(${note.id})">🗑️</button>
+                </div>
             `;
             container.appendChild(card);
         });
@@ -31,11 +40,12 @@ async function muatCatatan() {
     }
 }
 
-// 2. SIMPAN DATA (CREATE & UPDATE)
+// 2. CREATE ATAU UPDATE
 document.getElementById('noteForm').addEventListener('submit', async (e) => {
     e.preventDefault();
     const title = document.getElementById('title').value;
     const content = document.getElementById('content').value;
+    const color = document.getElementById('colorSelect').value;
 
     try {
         let url = API_URL;
@@ -49,7 +59,7 @@ document.getElementById('noteForm').addEventListener('submit', async (e) => {
         const response = await fetch(url, {
             method: method,
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ title, content })
+            body: JSON.stringify({ title, content, color })
         });
 
         if (!response.ok) throw new Error('Gagal memproses data');
@@ -61,9 +71,9 @@ document.getElementById('noteForm').addEventListener('submit', async (e) => {
     }
 });
 
-// 3. HAPUS DATA (DELETE)
+// 3. DELETE CATATAN
 async function hapusCatatan(id) {
-    if(!confirm('Apakah Anda yakin ingin menghapus catatan ini?')) return;
+    if(!confirm('Hapus catatan ini?')) return;
     try {
         const response = await fetch(`${API_URL}/${id}`, { method: 'DELETE' });
         if (response.ok) {
@@ -79,6 +89,7 @@ function setModeEdit(note) {
     currentEditId = note.id;
     document.getElementById('title').value = note.title;
     document.getElementById('content').value = note.content;
+    document.getElementById('colorSelect').value = note.color || 'Putih';
     document.getElementById('submitBtn').innerText = 'Perbarui';
     document.getElementById('cancelBtn').style.display = 'inline-block';
 }
@@ -87,7 +98,8 @@ function resetForm() {
     currentEditId = null;
     document.getElementById('title').value = '';
     document.getElementById('content').value = '';
-    document.getElementById('submitBtn').innerText = 'Simpan';
+    document.getElementById('colorSelect').value = 'Putih';
+    document.getElementById('submitBtn').innerText = '+ Tambah';
     document.getElementById('cancelBtn').style.display = 'none';
 }
 
@@ -96,5 +108,10 @@ document.getElementById('cancelBtn').addEventListener('click', resetForm);
 function escapeHTML(str) {
     return str.replace(/[&<>'"]/g, tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag] || tag));
 }
+
+// Fitur auto-expand tinggi kotak input ketika diklik (Efek Google Keep asli)
+const txtArea = document.getElementById('content');
+txtArea.addEventListener('focus', () => { txtArea.style.height = '120px'; });
+txtArea.addEventListener('blur', () => { if(txtArea.value==="") txtArea.style.height = '44px'; });
 
 window.addEventListener('DOMContentLoaded', muatCatatan);
