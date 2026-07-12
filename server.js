@@ -1,7 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
-const noteRoutes = require('./routes/note.routes');
+const noteRoutes = require('./src/routes/note.routes');
 
 const app = express();
 app.use(cors());
